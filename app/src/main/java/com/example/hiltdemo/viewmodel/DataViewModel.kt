@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -40,6 +41,9 @@ class DataViewModel @Inject constructor(private val application: Application):An
     var disposableGetUsers: Disposable? = null
     var disposableCommitUser: Disposable? = null
 
+    /**
+     * 插入用户
+     */
     fun commitUser(){
         Log.i(TAG,"commitUser()");
         if (checkNull(userName.value) && checkNull(lastName.value)) {
@@ -56,7 +60,7 @@ class DataViewModel @Inject constructor(private val application: Application):An
     }
 
     /**
-     * 获取所有用户
+     * 获取所有用户 by rxjava
      */
     fun getAllUserWithRxjava(){
         disposableGetUsers = change(Observable.just(1)
@@ -151,8 +155,12 @@ class DataViewModel @Inject constructor(private val application: Application):An
         }
     }
 
+    /**
+     * 通过协程删除指定用户
+     */
     fun deleteUserWithXC(){
-        viewModelScope.launch {
+        if (checkNull(findUserName.value)||checkNull(deleteLastName.value)){
+            val deleteJob = viewModelScope.launch {
             val user = queryUserWithXC(findUserName.value!!,deleteLastName.value!!)
             var hasUser = false
             withContext(Dispatchers.Main){
@@ -170,12 +178,39 @@ class DataViewModel @Inject constructor(private val application: Application):An
             }else{
                 return@launch
             }
+            }
         }
     }
 
+    /**
+     * 通过协程查询User
+     * @param userName String 用户名
+     * @param lastName String lastname
+     * @return User 返回查询到的用户，没找到为空
+     */
     suspend fun queryUserWithXC(userName:String,lastName:String):User {
        return withContext(Dispatchers.IO) {
              userDao.findByName(userName,lastName)
         }
+    }
+
+    /**
+     * 获取所有用户 by rxjava
+     */
+    fun getAllUserWithRxXC(){
+        Log.i(TAG,"")
+        val deferred = viewModelScope.async {
+            val sb = StringBuilder("getAllUserWithRxXC() \n")
+            withContext(Dispatchers.IO){
+                userDao.getAll().forEach {
+                    sb.append("$it \n")
+                }
+            }
+            withContext(Dispatchers.Main){
+                Log.i(TAG+" lhnnb", sb.toString())
+                allUsers.value = sb.toString()
+            }
+        }
+//        deferred.await()
     }
 }

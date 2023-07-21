@@ -1,6 +1,8 @@
 package com.example.hiltdemo
 
 import android.os.Bundle
+import android.os.Handler
+import android.os.Looper
 import android.util.Log
 import androidx.appcompat.app.AppCompatActivity
 import androidx.navigation.findNavController
@@ -26,6 +28,7 @@ class MainActivity : AppCompatActivity() {
     @Inject lateinit var student:Student
     @Inject lateinit var core:Core
     @Inject lateinit var calendar: Calendar
+    var mHandler:Handler? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -45,5 +48,6 @@ class MainActivity : AppCompatActivity() {
         Log.e("LHNNB","ST ${student.getTime()},ts =${calendar.time}")
         setupActionBarWithNavController(navController, appBarConfiguration)
         navView.setupWithNavController(navController)
+        mHandler = Handler(Looper.myLooper()!!)
     }
 }

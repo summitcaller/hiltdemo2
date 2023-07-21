@@ -23,6 +23,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Scheduler.Worker
 import io.reactivex.rxjava3.schedulers.Schedulers
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
@@ -45,11 +47,19 @@ class DashboardFragment : Fragment() {
 
     @Inject lateinit var worker:Worker
 
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
+
+        CoroutineScope(Dispatchers.Main).launch {
+            // 在主线程中执行更新 UI 的操作
+            Log.i(TAG,"scope()");
+        }
+        Log.i(TAG,"dddddddd()");
         _binding = FragmentDashboardBinding.inflate(inflater,container,false)
         binding.viewModel = viewModel
         viewModel.findOrDeleteResult.observe(viewLifecycleOwner) {
@@ -64,6 +74,7 @@ class DashboardFragment : Fragment() {
         val root: View = binding.root
         binding.delete.setOnClickListener{
             worker.schedule{
+                Log.i(TAG,"deleteAll()")
                 userDao?.deleteAll()
             }
         }
@@ -77,8 +88,8 @@ class DashboardFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
-        viewModel.getAllUserWithRxjava()
-        var userList = ""
+        viewModel.getAllUserWithRxXC()
+        test1()
     }
 
 
@@ -96,13 +107,18 @@ class DashboardFragment : Fragment() {
     }
 
     suspend fun suspendF1():Int{
+        CoroutineScope(Dispatchers.Main).launch {
+            // 在主线程中执行更新 UI 的操作
+            Log.i(TAG,"scope()");
+        }
         delay(1000)
+        Thread.sleep(5000)
         Log.i(TAG,"suspendF1()");
         return 20
     }
 
     suspend fun sunpendF2():Int{
-        delay(2000)
+        delay(8000)
         Log.i(TAG,"sunpendF2()");
         return 25
     }

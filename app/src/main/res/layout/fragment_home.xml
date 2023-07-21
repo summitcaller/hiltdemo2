@@ -1,11 +1,66 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout>
+    <data>
+        <variable
+            name="viewmodel"
+            type="com.example.hiltdemo.viewmodel.ModeViewModel" />
+    </data>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.home.HomeFragment">
+    <Button
+        android:id="@+id/standard_mode_bn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{()->viewmodel.startStandard()}"
+        android:text="standard mode"/>
+    <Button
+        android:id="@+id/single_task_bn"
+        app:layout_constraintTop_toBottomOf="@+id/standard_mode_bn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:onClick="@{()->viewmodel.startSingleTask()}"
+        android:text="single task mode"/>
+
+
+    <Button
+        android:id="@+id/single_top_bn"
+        app:layout_constraintTop_toBottomOf="@+id/single_task_bn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:onClick="@{()->viewmodel.startSingleTop()}"
+        android:layout_height="wrap_content"
+        android:text="single Top mode"/>
+
+    <Button
+        android:id="@+id/single_instance_bn"
+        android:onClick="@{()->viewmodel.startSingleInstance()}"
+        app:layout_constraintTop_toBottomOf="@+id/single_top_bn"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="single instance mode"/>
+
+
+<!--    <Button-->
+<!--        android:id="@+id/single_top_bn"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/single_top_bn"-->
+<!--        app:layout_constraintLeft_toLeftOf="parent"-->
+<!--        app:layout_constraintRight_toRightOf="parent"-->
+<!--        android:layout_width="wrap_content"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="single Top mode"/>-->
+
 
     <TextView
         android:id="@+id/text_home"
